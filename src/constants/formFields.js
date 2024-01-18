@@ -67,5 +67,17 @@ const signupFields=[
         placeholder:"Confirm Password"   
     }
 ]
+const forgotFields = [
+    {
+        labelText:"Email address",
+        labelFor:"email-address",
+        id:"email-address",
+        name:"email",
+        type:"email",
+        autoComplete:"email",
+        isRequired:true,
+        placeholder:"Email address"   
+    }
+]
 
-export {loginFields,signupFields}
+export {loginFields,signupFields,forgotFields}

@@ -1,5 +1,6 @@
 import React from 'react'
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { signupFields } from "../constants/formFields"
 import FormAction from "./FormAction";
 import Input from "./Input";
@@ -9,7 +10,10 @@ let fieldsState={};
 
 fields.forEach(field => fieldsState[field.id]='');
 
-export default function Signup(){
+export default function Signup({
+    linkName,
+    linkUrl="#"
+  }){
   const [signupState,setSignupState]=useState(fieldsState);
 
   const handleChange=(e)=>setSignupState({...signupState,[e.target.id]:e.target.value});
@@ -26,11 +30,11 @@ export default function Signup(){
   }
 
     return(
-        <div className='bg-white w-1/4 h-5/6 rounded-lg'>
+        <div className='bg-white lg:w-1/4 w-[70%] h-[95%] rounded-lg'>
         <div className='flex flex-col justify-center items-center font-bold text-3xl mx-auto py-8'>
         Signup
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        <form className=" space-y-6 " onSubmit={handleSubmit}>
         <div className="">
         {
                 fields.map(field=>
@@ -49,12 +53,19 @@ export default function Signup(){
                 
                 )
             }
-          <FormAction handleSubmit={handleSubmit} text="Signup" />
+          <FormAction handleSubmit={handleSubmit} text="Signup" className="mb-2" />
         </div>
 
          
 
       </form>
+
+      <div className="lg:mt-24 mt-16 text-center">
+      <p className="text-gray-600 ">or Login using</p>
+      <Link to={linkUrl} className="font-medium text-purple-600 hover:text-purple-500">
+                {linkName}
+            </Link>
+      </div>
       </div>
     )
 }
