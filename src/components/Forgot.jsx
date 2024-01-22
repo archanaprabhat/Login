@@ -3,6 +3,7 @@ import Input from './Input';
 import FormAction from './FormAction';
 import { forgotFields } from '../constants/formFields';
 import { Link } from 'react-router-dom';
+import RegexInputValidator from './RegexInputValidator';
 
 const fields = forgotFields;
 let fieldsState = {};
@@ -17,10 +18,22 @@ function Forgot({
 
   const handleChange = (e) => setForgotState({ ...forgotState, [e.target.id]: e.target.value });
 
+  const handleEmailChange = (e) => {
+    const enteredEmail = e.target.value;
+    setForgotState({ ...forgotState, email: enteredEmail });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(forgotState);
-    
+   if (validEmail ) {
+      authenticateUser();
+    } else {
+      console.log('Invalid form submission');
+    }
+  };
+
+  const authenticateUser = () => {
+    console.log('Authentication logic goes here');
   };
 
   return (
@@ -37,18 +50,23 @@ function Forgot({
         <div className='-space-y-px'>
           {fields.map((field) => (
             <Input
-              key={field.id}
-              handleChange={handleChange}
-              value={forgotState[field.id]} 
-              labelText={field.labelText}
-              labelFor={field.labelFor}
-              id={field.id}
-              name={field.name}
-              type={field.type}
-              isRequired={field.isRequired}
-              placeholder={field.placeholder}
-            />
+            key="email"
+            handleChange={handleEmailChange}
+            value={forgotState.email}
+            labelText="Email"
+            labelFor="email"
+            id="email"
+            name="email"
+            type="email"
+            isRequired={true}
+            placeholder="Enter your email"
+          />
           ))}
+          <RegexInputValidator
+            value={forgotState.email}
+            regex={/^[^\s@]+@[^\s@]+\.[^\s@]+$/}
+            errorMessage="Please enter a valid email address"
+          />
         </div>
         <FormAction handleSubmit={handleSubmit} text="Continue" className="mt-5" />
       </form>

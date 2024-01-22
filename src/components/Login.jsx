@@ -1,29 +1,42 @@
-import React from "react";
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import Input from "./Input";
-import { loginFields } from "../constants/formFields";
-import FormAction from "./FormAction";
-import FormExtra from "./FormExtra";
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import Input from './Input';
+import { loginFields } from '../constants/formFields';
+import FormAction from './FormAction';
+import FormExtra from './FormExtra';
+import RegexInputValidator from './RegexInputValidator';
 
 const fields = loginFields;
 let fieldsState = {};
-fields.forEach((field) => (fieldsState[field.id] = ""));
+fields.forEach((field) => (fieldsState[field.id] = ''));
 
-export default function Login({ linkName, linkUrl = "#" }) {
+const Login = ({ linkName, linkUrl = '#' }) => {
   const [loginState, setLoginState] = useState(fieldsState);
 
-  const handleChange = (e) => {
-    setLoginState({ ...loginState, [e.target.id]: e.target.value });
+  const handleEmailChange = (e) => {
+    const enteredEmail = e.target.value;
+    setLoginState({ ...loginState, email: enteredEmail });
+  };
+
+  const handlePasswordChange = (e) => {
+    const enteredPassword = e.target.value;
+    setLoginState({ ...loginState, password: enteredPassword });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    authenticateUser();
+   if (validEmail && validPassword) {
+      authenticateUser();
+    } else {
+      console.log('Invalid form submission');
+    }
   };
 
-  //Handle Login API Integration here
-  const authenticateUser = () => {};
+  const authenticateUser = () => {
+    console.log('Authentication logic goes here');
+  };
+
+
 
   return (
     <div className="bg-white lg:w-1/4 w-[70%] h-[95%] rounded-lg">
@@ -32,33 +45,54 @@ export default function Login({ linkName, linkUrl = "#" }) {
       </div>
       <form className="mt-8 space-y-6">
         <div className="-space-y-px">
-          {fields.map((field) => (
-            <Input
-              key={field.id}
-              handleChange={handleChange}
-              value={loginState[field.id]}
-              labelText={field.labelText}
-              labelFor={field.labelFor}
-              id={field.id}
-              name={field.name}
-              type={field.type}
-              isRequired={field.isRequired}
-              placeholder={field.placeholder}
-            />
-          ))}
+          <Input
+            key="email"
+            handleChange={handleEmailChange}
+            value={loginState.email}
+            labelText="Email"
+            labelFor="email"
+            id="email"
+            name="email"
+            type="email"
+            isRequired={true}
+            placeholder="Enter your email"
+          />
+          <RegexInputValidator
+            value={loginState.email}
+            regex={/^[^\s@]+@[^\s@]+\.[^\s@]+$/}
+            errorMessage="Please enter a valid email address"
+          />
+
+          <Input
+            key="password"
+            handleChange={handlePasswordChange}
+            value={loginState.password}
+            labelText="Password"
+            labelFor="password"
+            id="password"
+            name="password"
+            type="password"
+            isRequired={true}
+            placeholder="Enter your password"
+          />
+          <RegexInputValidator
+            value={loginState.password}
+            regex={/^.{8,}$/}
+            errorMessage="Password must be at least 8 characters"
+          />
         </div>
 
         <FormExtra />
         <FormAction handleSubmit={handleSubmit} text="Login" />
       </form>
-      <div className="mt-4 text-center">
+ <div className="mt-4 text-center">
         <p className="text-gray-600 mb-2">or signup using</p>
         <div className="flex justify-center space-x-4 mt-5">
           <div className="bg-blue-500 rounded-full p-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 320 512"
-              class="h-8 w-8"
+              className="h-8 w-8"
             >
               <path
                 fill="#fff"
@@ -68,7 +102,7 @@ export default function Login({ linkName, linkUrl = "#" }) {
           </div>
           <div className="bg-blue-400 rounded-full p-2">
             <svg
-              class="h-8"
+              className="h-8"
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 512 512"
             >
@@ -80,7 +114,7 @@ export default function Login({ linkName, linkUrl = "#" }) {
           </div>
           <div className="bg-orange-500 rounded-full p-2">
             <svg
-              class="h-8"
+              className="h-8"
               aria-hidden="true"
               focusable="false"
               data-prefix="fab"
@@ -110,3 +144,7 @@ export default function Login({ linkName, linkUrl = "#" }) {
     </div>
   );
 }
+
+
+export default Login;
+
